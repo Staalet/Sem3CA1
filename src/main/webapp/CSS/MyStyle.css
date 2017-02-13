@@ -9,7 +9,10 @@ and open the template in the editor.
     Purpose    : To make our website look awesome.
 */
 
-body {
+*{
     background-color: black;
+}
+
+h1 {
     color: #1ec503;
 }

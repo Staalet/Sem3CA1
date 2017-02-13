@@ -1,7 +1,7 @@
 # Sem3CA1
 This is the repository for the CA1 project 2017
-Group # 
-- Thomas Staal, Christian Øst-Jacobsen
+Group 5
+- Thomas Staal, Mads Ibsen & Christian Øst-Jacobsen
 
 ## The plan for the next four days:
 
@@ -9,3 +9,7 @@ Group #
 - Day 3: Concentrate on writing your client and make sure you can connect to your server with multiple clients.
 - Day 4: Re-visit your Tomcat server and Nginx proxy and setup the reverse proxy from Nginx to Tomcat. Try to get to a point where you can deploy your chat server to Digital Ocean.
 
+## Protocol 
+Link to protocol:
+https://github.com/CphBusCosSem3/Exercises/blob/master/CA/CA1/ChatProtocolFall2016.pdf
+ 

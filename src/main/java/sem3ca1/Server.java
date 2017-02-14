@@ -24,7 +24,8 @@ public class Server {
     private int myPort;
     ArrayList<ClientHandling> clients = new ArrayList<>();
     public static void main(String[] args) {
-        
+        Server server = new Server();
+        server.RunServer("localhost", 8080);
     }
     
     private void RunServer(String ip, int port){

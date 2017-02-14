@@ -42,7 +42,7 @@ public class Server {
             serverSocket.bind(new InetSocketAddress(myIP, myPort));
 
             System.out.println("Server listens on " + myPort + " at " + myIP);
-            
+
             while (keepRunning) {
                 socket = serverSocket.accept();
                 ClientHandling cl = new ClientHandling(socket, this);
@@ -83,7 +83,16 @@ public class Server {
         }
         clientList += clients.get(clients.size() - 1).getUsername();
         return clientList;
+    }
 
+    //This method sends a message to sepcified user(s)
+    public void sendSpecific(String receiver, String text, String from) {
+
+        for (ClientHandling client : clients) {
+            if (client.getUsername().equals(receiver)) {
+                client.sendMessage("MSG#" + from + "#" + text);
+            }
+        }
     }
 
     public String getSuccessMsg(String toUser) {

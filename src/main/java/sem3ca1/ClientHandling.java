@@ -19,29 +19,30 @@ import java.util.logging.Logger;
  */
 public class ClientHandling extends Thread
 {
-    Socket link; 
-    private static String username;
-    private static Server server = new Server();
 
+    Socket link;
+    private static String username;
+    private Server server = new Server();
 
     public ClientHandling(Socket link, Server serv)
     {
-        this.server = serv; 
+        this.server = serv;
         this.link = link;
     }
 
-
     @Override
-    public void run(){
-        
-        try {
-            Scanner scan = new Scanner(link.getInputStream());
+    public void run()
+    {
+
+        try
+        {
             PrintWriter pw = new PrintWriter(link.getOutputStream());
+            Scanner scan = new Scanner(link.getInputStream());
             String[] inputFromClients = scan.nextLine().split("#");
             String msg = "";
             String tmpMsg = "";
             String output = "";
-            
+
             while (!msg.equals(""))
             {
                 msg = scan.nextLine();
@@ -49,42 +50,52 @@ public class ClientHandling extends Thread
                 inputFromClients[0] = inputFromClients[0].toUpperCase();
                 switch (inputFromClients[0])
                 {
-               //Setting username when logging in
-                case "LOGIN":
-                    ClientHandling.setUsername(inputFromClients[1]);
-                    Server.addClient(this);
-                    pw.println("UPDATE#" + this.getName());
-                    break;
+                    //Setting username when logging in
+                    case "LOGIN":
+                        ClientHandling.setUsername(inputFromClients[1]);
+                        Server.addClient(this);
+                        pw.println("UPDATE#" + this.getName());
+                        break;
 
-                //Sends message to a specific user    
-                case "MSG":
-                    if (tmpMsg.startsWith(username)) {   
-                        scan.nextLine();
-                        pw.println(Arrays.toString(inputFromClients));   
-                        pw.println();
-                        break;
-                    }
-                    //Sends a message to all the users online    
-                    if (msg.startsWith("ALL")) {
-                        scan.nextLine();
-                        pw.println(Arrays.toString(inputFromClients));
-                        pw.flush();
-                        break;
-                    } else {
-                        msg = "typo try again";
-                    }
+                    //Sends message to a specific user    
+                    case "MSG":
+                        if (tmpMsg.startsWith(username))
+                        {
+                            scan.nextLine();
+                            pw.println(Arrays.toString(inputFromClients));
+                            pw.println();
+                            break;
+                        }
+                        //Sends a message to all the users online    
+                        if (msg.startsWith("ALL"))
+                        {
+                            scan.nextLine();
+                            pw.println(Arrays.toString(inputFromClients));
+                            pw.flush();
+                            break;
+                        } else
+                        {
+                            msg = "typo try again";
+                        }
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
-            try {
+        } catch (IOException ex)
+        {
+            
+        } finally
+        {
+            try
+            {
+
+                deleteUser(link, this);
                 link.close();
-            } catch (IOException ex) {
+
+            } catch (IOException ex)
+            {
                 Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
 
 //    private String sendMessageToUser(){
@@ -104,5 +115,15 @@ public class ClientHandling extends Thread
     public static void setUsername(String aUsername)
     {
         username = aUsername;
+    }
+
+    public void deleteUser(Socket link, ClientHandling client) throws IOException
+    {
+        PrintWriter pw;
+        String clientName = client.getName(); 
+        pw = new PrintWriter(link.getOutputStream());
+        Server.removeClient(client);
+        pw.println("DELETE#" + clientName);
+
     }
 }

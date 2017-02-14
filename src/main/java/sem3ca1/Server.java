@@ -22,7 +22,7 @@ public class Server {
     private static ServerSocket serverSocket;
     private String myIP;
     private int myPort;
-    ArrayList<ClientHandling> clients = new ArrayList<>();
+    public static ArrayList<ClientHandling> clients = new ArrayList<>();
     public static void main(String[] args) {
         
     }

@@ -24,7 +24,7 @@ public class Server
     private String myIP;
     private int myPort;
     public static ArrayList<ClientHandling> clients = new ArrayList<>();
-    private String removedClient = "";
+    private static String removedClient = "";
 
     public static void main(String[] args)
     {
@@ -61,7 +61,7 @@ public class Server
 
     //Adds client from the list of clients. and prints the name of the
     //added user
-    private String addClient(ClientHandling client)
+    public static String addClient(ClientHandling client)
     {
         clients.add(client);
         return "UPDATE#" + client.getName(); 
@@ -69,7 +69,7 @@ public class Server
     }
 
     //Removes client from the list of clients. and prints the deleted client.
-    private String removeClient(ClientHandling client)
+    public static String removeClient(ClientHandling client)
     {
         removedClient = client.getName();
         clients.remove(client); 

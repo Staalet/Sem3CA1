@@ -55,8 +55,8 @@ public class ClientHandling extends Thread {
 
                     //Sends message to a specific user    
                     case "MSG":
-                        if (tmpMsg.startsWith(username)) {
-                            scan.nextLine();
+                        if (inputFromClients[1] == username) {
+                            
                             for (ClientHandling client : Server.clients) {
                                 if (client.equals(username)) {
                                     pw.println(inputFromClients[2]);
@@ -76,8 +76,10 @@ public class ClientHandling extends Thread {
                             msg = "typo try again";
                         }
                 }
-            }
 
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
 

@@ -20,13 +20,11 @@ import java.util.logging.Logger;
 public class ClientHandling extends Thread {
 
     Socket link;
-    String username;
+    private static String username;
     private Server server = new Server();
-    
 
-    public ClientHandling(Socket link, Server serv, String username) {
+    public ClientHandling(Socket link, Server serv) {
         this.server = serv;
-        this.username = username;
         this.link = link;
     }
 
@@ -34,8 +32,9 @@ public class ClientHandling extends Thread {
     public void run() {
 
         try {
-            Scanner scan = new Scanner(link.getInputStream());
+
             PrintWriter pw = new PrintWriter(link.getOutputStream());
+            Scanner scan = new Scanner(link.getInputStream());
             String[] inputFromClients = scan.nextLine().split("#");
             String msg = "";
             String tmpMsg = "";
@@ -46,10 +45,12 @@ public class ClientHandling extends Thread {
                 tmpMsg = msg;
                 inputFromClients[0] = inputFromClients[0].toUpperCase();
                 switch (inputFromClients[0]) {
+
                     //Setting username when logging in
                     case "LOGIN":
-                        
                         ClientHandling.setUsername(inputFromClients[1]);
+                        Server.addClient(this);
+                        pw.println("UPDATE#" + this.getName());
                         break;
 
                     //Sends message to a specific user    
@@ -68,18 +69,22 @@ public class ClientHandling extends Thread {
                         if (msg.startsWith("ALL")) {
                             scan.nextLine();
                             pw.println(Arrays.toString(inputFromClients));
-                            pw.flush();
+                            pw.println();
                             break;
                         } else {
+
                             msg = "typo try again";
                         }
                 }
             }
-        } catch (IOException ex) {
-            Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
+
         } finally {
             try {
+
+                deleteUser(link, this);
+
                 link.close();
+
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -90,4 +95,27 @@ public class ClientHandling extends Thread {
 //    private String sendMessageToUser(){
 //        
 //    }
+    /**
+     * @return the username
+     */
+    public static String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param aUsername the username to set
+     */
+    public static void setUsername(String aUsername) {
+        username = aUsername;
+    }
+
+    public void deleteUser(Socket link, ClientHandling client) throws IOException {
+        PrintWriter pw;
+        String clientName = client.getName();
+        pw = new PrintWriter(link.getOutputStream());
+        Server.removeClient(client);
+        pw.println("DELETE#" + clientName);
+
+    }
+
 }

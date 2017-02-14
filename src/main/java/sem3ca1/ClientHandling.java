@@ -49,14 +49,21 @@ public class ClientHandling extends Thread {
                     //Setting username when logging in
                     case "LOGIN":
                         ClientHandling.setUsername(inputFromClients[1]);
-                        Server.addClient(this);
-                        pw.println("UPDATE#" + this.getName());
-                        break;
+
+                        if (Server.clients.contains(this)) {
+                            Server.addClient(this);
+                            pw.println("UPDATE#" + this.getName());
+                            break;
+                        } else {
+                            pw.println("FAIL");
+                            break;
+                        }
 
                     //Sends message to a specific user    
                     case "MSG":
+
                         if (inputFromClients[1] == username) {
-                            
+
                             for (ClientHandling client : Server.clients) {
                                 if (client.equals(username)) {
                                     pw.println(inputFromClients[2]);
@@ -69,11 +76,10 @@ public class ClientHandling extends Thread {
                         if (msg.startsWith("ALL")) {
                             scan.nextLine();
                             pw.println(Arrays.toString(inputFromClients));
-                            pw.println();
+                            pw.flush();
                             break;
                         } else {
-
-                            msg = "typo try again";
+                            pw.println("typo try again");
                         }
                 }
 

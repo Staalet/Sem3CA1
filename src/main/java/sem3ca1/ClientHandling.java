@@ -17,21 +17,25 @@ import java.util.logging.Logger;
  *
  * @author christian
  */
-public class ClientHandling extends Thread {
+public class ClientHandling extends Thread
+{
 
     Socket link;
     private static String username;
     private Server server = new Server();
 
-    public ClientHandling(Socket link, Server serv) {
+    public ClientHandling(Socket link, Server serv)
+    {
         this.server = serv;
         this.link = link;
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
 
-        try {
+        try
+        {
 
             PrintWriter pw = new PrintWriter(link.getOutputStream());
             Scanner scan = new Scanner(link.getInputStream());
@@ -40,25 +44,37 @@ public class ClientHandling extends Thread {
             String tmpMsg = "";
             String output = "";
 
-            while (!msg.equals("")) {
+            while (!msg.equals(""))
+            {
                 msg = scan.nextLine();
                 tmpMsg = msg;
                 inputFromClients[0] = inputFromClients[0].toUpperCase();
-                switch (inputFromClients[0]) {
+                switch (inputFromClients[0])
+                {
 
                     //Setting username when logging in
                     case "LOGIN":
-                        ClientHandling.setUsername(inputFromClients[1]);
-                        Server.addClient(this);
-                        pw.println("UPDATE#" + this.getName());
-                        break;
+                        if (Server.clients.contains(this))
+                        {
+                            ClientHandling.setUsername(inputFromClients[1]);
+                            Server.addClient(this);
+                            pw.println("UPDATE#" + this.getName());
+                            break;
+                        } else
+                        {
+                            pw.println("FAIL");
+                            break;
+                        }
 
                     //Sends message to a specific user    
                     case "MSG":
-                        if (tmpMsg.startsWith(username)) {
+                        if (tmpMsg.startsWith(username))
+                        {
                             scan.nextLine();
-                            for (ClientHandling client : Server.clients) {
-                                if (client.equals(username)) {
+                            for (ClientHandling client : Server.clients)
+                            {
+                                if (client.equals(username))
+                                {
                                     pw.println(inputFromClients[2]);
                                     pw.flush();
                                     break;
@@ -66,26 +82,34 @@ public class ClientHandling extends Thread {
                             }
                         }
                         //Sends a message to all the users online    
-                        if (msg.startsWith("ALL")) {
+                        if (msg.startsWith("ALL"))
+                        {
                             scan.nextLine();
                             pw.println(Arrays.toString(inputFromClients));
                             pw.println();
                             break;
-                        } else {
+                        } else
+                        {
 
                             msg = "typo try again";
                         }
                 }
             }
 
-        } finally {
-            try {
+        } catch (IOException ex)
+        {
+            Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
+        } finally
+        {
+            try
+            {
 
                 deleteUser(link, this);
 
                 link.close();
 
-            } catch (IOException ex) {
+            } catch (IOException ex)
+            {
                 Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -98,18 +122,21 @@ public class ClientHandling extends Thread {
     /**
      * @return the username
      */
-    public static String getUsername() {
+    public static String getUsername()
+    {
         return username;
     }
 
     /**
      * @param aUsername the username to set
      */
-    public static void setUsername(String aUsername) {
+    public static void setUsername(String aUsername)
+    {
         username = aUsername;
     }
 
-    public void deleteUser(Socket link, ClientHandling client) throws IOException {
+    public void deleteUser(Socket link, ClientHandling client) throws IOException
+    {
         PrintWriter pw;
         String clientName = client.getName();
         pw = new PrintWriter(link.getOutputStream());

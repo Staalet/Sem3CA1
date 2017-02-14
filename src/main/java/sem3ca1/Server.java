@@ -16,37 +16,86 @@ import java.util.logging.Logger;
  *
  * @author christian
  */
-public class Server {
-    
+public class Server
+{
+
     private boolean keepRunning = true;
     private static ServerSocket serverSocket;
     private String myIP;
     private int myPort;
-    ArrayList<ClientHandling> clients = new ArrayList<>();
-    public static void main(String[] args) {
+    public static ArrayList<ClientHandling> clients = new ArrayList<>();
+    private String removedClient = "";
+
+    public static void main(String[] args)
+    {
+
         Server server = new Server();
         server.RunServer("localhost", 8080);
     }
-    
-    private void RunServer(String ip, int port){
-            myIP = ip;
-            myPort = port;
-        try {
+
+    private void RunServer(String ip, int port)
+    {
+        myIP = ip;
+        myPort = port;
+        try
+        {
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress(myIP, myPort));
-            
-            while(keepRunning){
+
+            while (keepRunning)
+            {
                 serverSocket.accept();
-                
+
             }
-                
-        } catch (IOException ex) {
+
+        } catch (IOException ex)
+        {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private void stopServer(){
+
+    private void stopServer()
+    {
         keepRunning = false;
     }
-   
+
+    //Adds client from the list of clients. and prints the name of the
+    //added user
+    private String addClient(ClientHandling client)
+    {
+        clients.add(client);
+        return "UPDATE#" + client.getName(); 
+
+    }
+
+    //Removes client from the list of clients. and prints the deleted client.
+    private String removeClient(ClientHandling client)
+    {
+        removedClient = client.getName();
+        clients.remove(client); 
+        return "DELETE#" + removedClient; 
+    }
+
+//    public void notifyServer()
+//    {
+//        getAddedUser();
+//    }
+
+    public static String getClientList()
+    {
+        String clientList = "CLIENTS:";
+        for (int i = 0; i < clients.size() - 1; i++)
+        {
+            clientList += clients.get(i).getUsername() + "#";
+        }
+        clientList += clients.get(clients.size() - 1).getUsername();
+        return clientList;
+
+    }
+
+    public String getSuccessMsg(String toUser)
+    {
+        return "OK#" + getClientList();
+    }
+
 }

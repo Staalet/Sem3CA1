@@ -51,7 +51,7 @@ public class ClientHandling extends Thread {
                 case "MSG#ALL":
                     scan.nextLine();
                     for (ClientHandling clients : server.clients) {
-                        
+
                         pw.println(Arrays.toString(inputFromClients));
 
                     }
@@ -78,5 +78,4 @@ public class ClientHandling extends Thread {
     public static void setUsername(String aUsername) {
         username = aUsername;
     }
-
 }

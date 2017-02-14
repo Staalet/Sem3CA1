@@ -17,12 +17,20 @@ import java.util.Scanner;
  *
  * @author christian
  */
-public class ClientHandling extends Thread {
-
+public class ClientHandling extends Thread
+{
+    Socket link; 
     private static String username;
-    private static Server server = new Server();
+    private Server server = new Server();
 
-    public static void handleClient(Socket s) throws IOException {
+    public ClientHandling(Socket link, Server serv)
+    {
+        this.server = serv; 
+        this.link = link;
+    }
+
+    public static void handleClient(Socket s) throws IOException
+    {
         Scanner scan = new Scanner(s.getInputStream());
         PrintWriter pw = new PrintWriter(s.getOutputStream());
         String[] inputFromClients = scan.nextLine().split("#");
@@ -30,11 +38,13 @@ public class ClientHandling extends Thread {
         String tmpMsg = "";
         String output = "";
 
-        while (!msg.equals("")) {
+        while (!msg.equals(""))
+        {
             msg = scan.nextLine();
             tmpMsg = msg;
             inputFromClients[0] = inputFromClients[0].toUpperCase();
-            switch (inputFromClients[0]) {
+            switch (inputFromClients[0])
+            {
 
                 //Setting username when logging in
                 case "LOGIN":
@@ -42,7 +52,8 @@ public class ClientHandling extends Thread {
 
                 //Checks if you write to specific user    
                 case "MSG#":
-                    if (!ClientHandling.username.isEmpty()) {
+                    if (!ClientHandling.username.isEmpty())
+                    {
                         pw.println(Arrays.toString(inputFromClients));
                         pw.flush();
                     }
@@ -50,7 +61,8 @@ public class ClientHandling extends Thread {
                 //Sends a message to all the users online    
                 case "MSG#ALL":
                     scan.nextLine();
-                    for (ClientHandling clients : server.clients) {
+                    for (ClientHandling clients : server.clients)
+                    {
 
                         pw.println(Arrays.toString(inputFromClients));
 
@@ -68,14 +80,16 @@ public class ClientHandling extends Thread {
     /**
      * @return the username
      */
-    public static String getUsername() {
+    public static String getUsername()
+    {
         return username;
     }
 
     /**
      * @param aUsername the username to set
      */
-    public static void setUsername(String aUsername) {
+    public static void setUsername(String aUsername)
+    {
         username = aUsername;
     }
 }

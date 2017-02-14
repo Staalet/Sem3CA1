@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,7 +22,7 @@ import java.util.Scanner;
 public class ClientHandling extends Thread
 {
     Socket link; 
-    private static String username;
+    private String username;
     private Server server = new Server();
 
     public ClientHandling(Socket link, Server serv)
@@ -29,49 +31,58 @@ public class ClientHandling extends Thread
         this.link = link;
     }
 
-    public static void handleClient(Socket s) throws IOException
-    {
-        Scanner scan = new Scanner(s.getInputStream());
-        PrintWriter pw = new PrintWriter(s.getOutputStream());
-        String[] inputFromClients = scan.nextLine().split("#");
-        String msg = "";
-        String tmpMsg = "";
-        String output = "";
-
-        while (!msg.equals(""))
-        {
-            msg = scan.nextLine();
-            tmpMsg = msg;
-            inputFromClients[0] = inputFromClients[0].toUpperCase();
-            switch (inputFromClients[0])
+    @Override
+    public void run(){
+        
+        try {
+            Scanner scan = new Scanner(link.getInputStream());
+            PrintWriter pw = new PrintWriter(link.getOutputStream());
+            String[] inputFromClients = scan.nextLine().split("#");
+            String msg = "";
+            String tmpMsg = "";
+            String output = "";
+            
+            while (!msg.equals(""))
             {
-
-                //Setting username when logging in
-                case "LOGIN":
-                    ClientHandling.setUsername(inputFromClients[1]);
-
-                //Checks if you write to specific user    
-                case "MSG#":
-                    if (!ClientHandling.username.isEmpty())
-                    {
-                        pw.println(Arrays.toString(inputFromClients));
-                        pw.flush();
-                    }
-
-                //Sends a message to all the users online    
-                case "MSG#ALL":
-                    scan.nextLine();
-                    for (ClientHandling clients : server.clients)
-                    {
-
-                        pw.println(Arrays.toString(inputFromClients));
-
-                    }
-
+                msg = scan.nextLine();
+                tmpMsg = msg;
+                inputFromClients[0] = inputFromClients[0].toUpperCase();
+                switch (inputFromClients[0])
+                {
+                    
+                    //Setting username when logging in
+                    case "LOGIN":
+                        ClientHandling.setUsername(inputFromClients[1]);
+                        
+                        //Checks if you write to specific user
+                    case "MSG#":
+                        if (!ClientHandling.username.isEmpty())
+                        {
+                            pw.println(Arrays.toString(inputFromClients));
+                            pw.flush();
+                        }
+                        
+                        //Sends a message to all the users online
+                    case "MSG#ALL":
+                        scan.nextLine();
+                        for (ClientHandling clients : server.clients)
+                        {
+                            
+                            pw.println(Arrays.toString(inputFromClients));
+                            
+                        }
+                }
             }
-
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                link.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
+        
     }
 
 //    private String sendMessageToUser(){

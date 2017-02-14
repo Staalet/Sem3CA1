@@ -6,8 +6,10 @@
 package sem3ca1;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,76 +18,67 @@ import java.util.logging.Logger;
  *
  * @author christian
  */
-public class Server
-{
+public class Server {
 
     private boolean keepRunning = true;
-    private static ServerSocket serverSocket;
+    private ServerSocket serverSocket;
+    private Socket socket;
     private String myIP;
     private int myPort;
-    public static ArrayList<ClientHandling> clients = new ArrayList<>();
-    private static String removedClient = "";
+    public ArrayList<ClientHandling> clients = new ArrayList<>();
+    private String removedClient = "";
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
 
         Server server = new Server();
-        server.RunServer("localhost", 8080);
+        server.RunServer("localhost", 8081);
     }
 
-    private void RunServer(String ip, int port)
-    {
+    private void RunServer(String ip, int port) {
         myIP = ip;
         myPort = port;
-        try
-        {
+        try {
             serverSocket = new ServerSocket();
             serverSocket.bind(new InetSocketAddress(myIP, myPort));
 
-            while (keepRunning)
-            {
-                serverSocket.accept();
-
+            System.out.println("Server listens on " + myPort + " at " + myIP);
+            
+            while (keepRunning) {
+                socket = serverSocket.accept();
+                ClientHandling cl = new ClientHandling(socket, this);
+                cl.start();
             }
 
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void stopServer()
-    {
+    private void stopServer() {
         keepRunning = false;
     }
 
     //Adds client from the list of clients. and prints the name of the
     //added user
-    public static String addClient(ClientHandling client)
-    {
+    public String addClient(ClientHandling client) {
         clients.add(client);
-        return "UPDATE#" + client.getName(); 
+        return "UPDATE#" + client.getName();
 
     }
 
     //Removes client from the list of clients. and prints the deleted client.
-    public static String removeClient(ClientHandling client)
-    {
+    public void removeClient(ClientHandling client) {
         removedClient = client.getName();
-        clients.remove(client); 
-        return "DELETE#" + removedClient; 
+        clients.remove(client);
     }
 
 //    public void notifyServer()
 //    {
 //        getAddedUser();
 //    }
-
-    public static String getClientList()
-    {
+    public String getClientList() {
         String clientList = "CLIENTS:";
-        for (int i = 0; i < clients.size() - 1; i++)
-        {
+        for (int i = 0; i < clients.size() - 1; i++) {
             clientList += clients.get(i).getUsername() + "#";
         }
         clientList += clients.get(clients.size() - 1).getUsername();
@@ -93,8 +86,7 @@ public class Server
 
     }
 
-    public String getSuccessMsg(String toUser)
-    {
+    public String getSuccessMsg(String toUser) {
         return "OK#" + getClientList();
     }
 

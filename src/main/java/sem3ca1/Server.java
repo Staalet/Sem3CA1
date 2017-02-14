@@ -26,6 +26,8 @@ public class Server {
 
     public static void main(String[] args) {
 
+        Server server = new Server();
+        server.RunServer("localhost", 8080);
     }
 
     private void RunServer(String ip, int port) {
@@ -63,7 +65,7 @@ public class Server {
         String clientList = "CLIENTS:";
         for (int i = 0; i < clients.size()-1; i++) {
             clientList += clients.get(i).getUsername() + "#";
-        } clientList += clients.get(clients.size()-1).getUsername;
+        } clientList += clients.get(clients.size()-1).getUsername();
         return clientList;
     }
 

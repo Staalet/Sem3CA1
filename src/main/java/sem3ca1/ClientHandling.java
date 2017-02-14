@@ -8,6 +8,9 @@ package sem3ca1;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Scanner;
 
 /**
@@ -17,11 +20,12 @@ import java.util.Scanner;
 public class ClientHandling extends Thread {
 
     private static String username;
+    private static Server server = new Server();
 
     public static void handleClient(Socket s) throws IOException {
         Scanner scan = new Scanner(s.getInputStream());
         PrintWriter pw = new PrintWriter(s.getOutputStream());
-
+        String[] inputFromClients = scan.nextLine().split("#");
         String msg = "";
         String tmpMsg = "";
         String output = "";
@@ -29,15 +33,38 @@ public class ClientHandling extends Thread {
         while (!msg.equals("")) {
             msg = scan.nextLine();
             tmpMsg = msg;
+            inputFromClients[0] = inputFromClients[0].toUpperCase();
+            switch (inputFromClients[0]) {
 
-            switch (msg) {
-                case 1: msg.substring(0, 4).startsWith("MSG#");
+                //Setting username when logging in
+                case "LOGIN":
+                    ClientHandling.setUsername(inputFromClients[1]);
+
+                //Checks if you write to specific user    
+                case "MSG#":
+                    if (!ClientHandling.username.isEmpty()) {
+                        pw.println(Arrays.toString(inputFromClients));
+                        pw.flush();
+                    }
+
+                //Sends a message to all the users online    
+                case "MSG#ALL":
+                    scan.nextLine();
+                    for (ClientHandling clients : server.clients) {
+                        
+                        pw.println(Arrays.toString(inputFromClients));
+
+                    }
+
             }
 
         }
+
     }
 
-
+//    private String sendMessageToUser(){
+//        
+//    }
     /**
      * @return the username
      */

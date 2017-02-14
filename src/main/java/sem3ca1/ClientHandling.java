@@ -17,23 +17,22 @@ import java.util.logging.Logger;
  *
  * @author christian
  */
-public class ClientHandling extends Thread
-{
-    Socket link; 
-    private static String username;
-    private static Server server = new Server();
+public class ClientHandling extends Thread {
 
+    Socket link;
+    String username;
+    private Server server = new Server();
+    
 
-    public ClientHandling(Socket link, Server serv)
-    {
-        this.server = serv; 
+    public ClientHandling(Socket link, Server serv, String username) {
+        this.server = serv;
+        this.username = username;
         this.link = link;
     }
 
-
     @Override
-    public void run(){
-        
+    public void run() {
+
         try {
             Scanner scan = new Scanner(link.getInputStream());
             PrintWriter pw = new PrintWriter(link.getOutputStream());
@@ -41,66 +40,54 @@ public class ClientHandling extends Thread
             String msg = "";
             String tmpMsg = "";
             String output = "";
-            
-            while (!msg.equals(""))
-            {
+
+            while (!msg.equals("")) {
                 msg = scan.nextLine();
                 tmpMsg = msg;
                 inputFromClients[0] = inputFromClients[0].toUpperCase();
-                switch (inputFromClients[0])
-                {
-               //Setting username when logging in
-                case "LOGIN":
-                    ClientHandling.setUsername(inputFromClients[1]);
-                    break;
+                switch (inputFromClients[0]) {
+                    //Setting username when logging in
+                    case "LOGIN":
+                        
+                        ClientHandling.setUsername(inputFromClients[1]);
+                        break;
 
-                //Sends message to a specific user    
-                case "MSG":
-                    if (tmpMsg.startsWith(username)) {   
-                        scan.nextLine();
-                        pw.println(Arrays.toString(inputFromClients));   
-                        pw.println();
-                        break;
-                    }
-                    //Sends a message to all the users online    
-                    if (msg.startsWith("ALL")) {
-                        scan.nextLine();
-                        pw.println(Arrays.toString(inputFromClients));
-                        pw.flush();
-                        break;
-                    } else {
-                        msg = "typo try again";
-                    }
+                    //Sends message to a specific user    
+                    case "MSG":
+                        if (tmpMsg.startsWith(username)) {
+                            scan.nextLine();
+                            for (ClientHandling client : Server.clients) {
+                                if (client.equals(username)) {
+                                    pw.println(inputFromClients[2]);
+                                    pw.flush();
+                                    break;
+                                }
+                            }
+                        }
+                        //Sends a message to all the users online    
+                        if (msg.startsWith("ALL")) {
+                            scan.nextLine();
+                            pw.println(Arrays.toString(inputFromClients));
+                            pw.flush();
+                            break;
+                        } else {
+                            msg = "typo try again";
+                        }
                 }
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
-        }finally{
+        } finally {
             try {
                 link.close();
             } catch (IOException ex) {
                 Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
 
 //    private String sendMessageToUser(){
 //        
 //    }
-    /**
-     * @return the username
-     */
-    public static String getUsername()
-    {
-        return username;
-    }
-
-    /**
-     * @param aUsername the username to set
-     */
-    public static void setUsername(String aUsername)
-    {
-        username = aUsername;
-    }
 }

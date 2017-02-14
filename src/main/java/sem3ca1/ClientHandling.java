@@ -52,6 +52,8 @@ public class ClientHandling extends Thread
                //Setting username when logging in
                 case "LOGIN":
                     ClientHandling.setUsername(inputFromClients[1]);
+                    Server.addClient(this);
+                    pw.println("UPDATE#" + this.getName());
                     break;
 
                 //Sends message to a specific user    

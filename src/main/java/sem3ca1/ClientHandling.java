@@ -69,6 +69,8 @@ public class ClientHandling extends Thread {
                                     pw.println(inputFromClients[2]);
                                     pw.flush();
                                     break;
+                                } else{
+                                    pw.println("typo try again");
                                 }
                             }
                         }

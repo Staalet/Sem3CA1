@@ -39,21 +39,24 @@ public class ClientHandling extends Thread {
                 //Setting username when logging in
                 case "LOGIN":
                     ClientHandling.setUsername(inputFromClients[1]);
+                    break;
 
-                //Checks if you write to specific user    
-                case "MSG#":
-                    if (!ClientHandling.username.isEmpty()) {
+                //Sends message to a specific user    
+                case "MSG":
+                    if (tmpMsg.startsWith(username)) {   
+                        scan.nextLine();
+                        pw.println(Arrays.toString(inputFromClients));   
+                        pw.println();
+                        break;
+                    }
+                    //Sends a message to all the users online    
+                    if (msg.startsWith("ALL")) {
+                        scan.nextLine();
                         pw.println(Arrays.toString(inputFromClients));
                         pw.flush();
-                    }
-
-                //Sends a message to all the users online    
-                case "MSG#ALL":
-                    scan.nextLine();
-                    for (ClientHandling clients : server.clients) {
-
-                        pw.println(Arrays.toString(inputFromClients));
-
+                        break;
+                    } else {
+                        msg = "typo try again";
                     }
 
             }

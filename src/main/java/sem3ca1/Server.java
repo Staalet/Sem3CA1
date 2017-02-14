@@ -73,7 +73,7 @@ public class Server
     {
         removedClient = client.getName();
         clients.remove(client); 
-        return "DELETE#" + client.getName(); 
+        return "DELETE#" + removedClient; 
     }
 
 //    public void notifyServer()

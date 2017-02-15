@@ -19,30 +19,31 @@ import java.util.logging.Logger;
  * @author Staal
  */
 public class Client {
+
     Socket socket;
     private Scanner scan;
     private PrintWriter pw;
     private InetAddress adress;
     int port;
-    
-    
-    private void connectToServer(String ip, int port) throws UnknownHostException, IOException{
+
+    private void connectToServer(String ip, int port) throws UnknownHostException, IOException {
         this.port = port;
         adress = InetAddress.getByName(ip);
         socket = new Socket(adress, port);
         pw = new PrintWriter(socket.getOutputStream());
         scan = new Scanner(socket.getInputStream());
     }
-    
-    private String receive(String msg){
+
+    private String receive(String msg) {
         msg = scan.nextLine();
         return msg;
     }
-    
-    private void send(String msg){
+
+    private void send(String msg) {
         pw.println(msg);
         pw.flush();
     }
+
     public static void main(String[] args) {
         int port = 8081;
         String ip = "localhost";
@@ -51,19 +52,17 @@ public class Client {
             port = Integer.parseInt(args[1]);
         }
         try {
-            
+
             Client tester = new Client();
             tester.connectToServer(ip, port);
             tester.send("login#Thomas");
             tester.send("MSG#ALL#hej");
-                  
-            
-            //System.in.read();      
+
         } catch (UnknownHostException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+        }
+
     }
 }

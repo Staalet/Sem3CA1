@@ -6,11 +6,9 @@
 package sem3ca1;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

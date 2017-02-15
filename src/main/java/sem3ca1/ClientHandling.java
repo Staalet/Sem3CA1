@@ -8,10 +8,7 @@ package sem3ca1;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Scanner;    
 
 /**
  *
@@ -39,6 +36,7 @@ public class ClientHandling extends Thread {
             scan = new Scanner(link.getInputStream());
 
             while (true) {
+                
                 String[] inputFromClients = scan.nextLine().split("#");//Læser input fra client og deler inputtet op. 
                 inputFromClients[0] = inputFromClients[0].toUpperCase();//Prevents upper/lowercase typos.
                 inputFromClients[1] = inputFromClients[1].toUpperCase();//writes all names in uppercase.
@@ -50,9 +48,8 @@ public class ClientHandling extends Thread {
                         break;
 
                     case "MSG":
-                           
                         if (inputFromClients[1].equals("ALL")) {
-                        server.sendToAll(inputFromClients[2]); //Sends a message to all the users online 
+                            server.sendToAll(inputFromClients[2]); //Sends a message to all the users online 
                             break;
                         } else {
                             server.sendSpecific(inputFromClients[1], inputFromClients[2], getUsername());
@@ -61,7 +58,7 @@ public class ClientHandling extends Thread {
             }
         } catch (IOException ex) {
             System.out.println("io exception in clienthandler switch" + ex);
-        } catch ( Exception e2) {
+        } catch (Exception e2) {
             server.removeClient(this);
             try {
                 link.close();

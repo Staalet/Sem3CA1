@@ -46,7 +46,7 @@ public class ClientHandling extends Thread {
                     case "LOGIN":
                         setUsername(inputFromClients[1]); //set username
                         server.addClient(this); //add client to list on server.
-                        sendMessage(server.getClientList()); //prints the clientlist th the 
+                        sendMessage(server.getClientList()); //prints the clientlist to the new client.
                         break;
 
                     case "MSG":
@@ -61,7 +61,7 @@ public class ClientHandling extends Thread {
             }
         } catch (IOException ex) {
             System.out.println("io exception in clienthandler switch" + ex);
-        } catch (NoSuchElementException | ArrayIndexOutOfBoundsException e2) {
+        } catch ( Exception e2) {
             server.removeClient(this);
             try {
                 link.close();

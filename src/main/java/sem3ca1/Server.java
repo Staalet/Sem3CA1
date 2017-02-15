@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,6 +52,7 @@ public class Server {
 
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        
         }
     }
 
@@ -62,8 +64,7 @@ public class Server {
     //added user
     public String addClient(ClientHandling client) {
         clients.add(client);
-        return "UPDATE#" + client.getName();
-
+        return "UPDATE#" + client.getUsername();
     }
 
     //Removes client from the list of clients. and prints the deleted client.
@@ -72,10 +73,6 @@ public class Server {
         clients.remove(client);
     }
 
-//    public void notifyServer()
-//    {
-//        getAddedUser();
-//    }
     public String getClientList() {
         String clientList = "CLIENTS:";
         for (int i = 0; i < clients.size() - 1; i++) {
@@ -87,7 +84,6 @@ public class Server {
 
     //This method sends a message to sepcified user(s)
     public void sendSpecific(String receiver, String text, String from) {
-
         for (ClientHandling client : clients) {
             if (client.getUsername().equals(receiver)) {
                 client.sendMessage("MSG#" + from + "#" + text);

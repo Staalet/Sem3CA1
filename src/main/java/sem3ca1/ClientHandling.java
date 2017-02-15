@@ -38,6 +38,7 @@ public class ClientHandling extends Thread {
             scan = new Scanner(link.getInputStream());
 
             while (true) {
+                //Læser input fra client og deler inputtet op. 
                 String[] inputFromClients = scan.nextLine().split("#");
                 //Prevents upper/lowercase typos
                 inputFromClients[0] = inputFromClients[0].toUpperCase();
@@ -45,27 +46,21 @@ public class ClientHandling extends Thread {
                 switch (inputFromClients[0]) {
                     //Setting username when logging in
                     case "LOGIN":
-                        setUsername(inputFromClients[1]);
-
-                        // if (Server.clients.) {
-                        server.addClient(this);
-                        sendMessage("UPDATE#" + getUsername());
+                        setUsername(inputFromClients[1]); //set username
+                        sendMessage(server.addClient(this)); //add client to list on server.
+                        sendMessage(server.getClientList()); //prints the clientlist th the 
                         break;
 
-                    //Sends message to a specific user    
                     case "MSG":
 
-                        server.sendSpecific(inputFromClients[1], inputFromClients[2], getUsername());
-                        
                         //Sends a message to all the users online    
                         if (inputFromClients[1].equals("ALL")) {
                             sendMessage("MSG#" + getUsername() + "#" + inputFromClients[2]);
                             break;
                         } else {
-                            sendMessage("Typo, try again..");
+                            server.sendSpecific(inputFromClients[1], inputFromClients[2], getUsername());
                         }
                 }
-
             }
         } catch (IOException ex) {
             Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);

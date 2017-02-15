@@ -49,7 +49,7 @@ public class ClientHandling extends Thread {
 
                     case "MSG":
                         if (inputFromClients[1].equals("ALL")) {
-                            server.sendToAll(inputFromClients[2]); //Sends a message to all the users online 
+                            server.sendToAll(inputFromClients[2],this.username); //Sends a message to all the users online 
                             break;
                         } else {
                             server.sendSpecific(inputFromClients[1], inputFromClients[2], getUsername());
@@ -59,12 +59,14 @@ public class ClientHandling extends Thread {
         } catch (IOException ex) {
             System.out.println("io exception in clienthandler switch" + ex);
         } catch (Exception e2) {
-            server.removeClient(this);
             try {
                 link.close();
                 System.out.println("A client has disconnected");
             } catch (IOException ex) {
                 ex.printStackTrace();
+            } finally {
+                
+            server.removeClient(this);
             }
         }
 

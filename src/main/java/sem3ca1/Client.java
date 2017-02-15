@@ -26,7 +26,7 @@ public class Client {
     private InetAddress adress;
     int port;
 
-    private void connectToServer(String ip, int port) throws UnknownHostException, IOException {
+    public void connectToServer(String ip, int port) throws UnknownHostException, IOException {
         this.port = port;
         adress = InetAddress.getByName(ip);
         socket = new Socket(adress, port);
@@ -34,15 +34,18 @@ public class Client {
         scan = new Scanner(socket.getInputStream());
     }
 
-    private String receive(String msg) {
+    public String receive() {
+        String msg; 
         msg = scan.nextLine();
         return msg;
     }
 
-    private void send(String msg) {
+    public void send(String msg) {
         pw.println(msg);
         pw.flush();
     }
+    
+
 
     public static void main(String[] args) {
         int port = 8081;
@@ -63,6 +66,5 @@ public class Client {
         } catch (IOException ex) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }

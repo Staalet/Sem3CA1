@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +27,8 @@ public class Server {
     private String myIP;
     private int myPort;
     public ArrayList<ClientHandling> clients = new ArrayList<>();
-    private String removedClient = "";
+    private String removedClient;
+    private String newClient;
 
     public static void main(String[] args) {
 
@@ -42,7 +44,7 @@ public class Server {
             serverSocket.bind(new InetSocketAddress(myIP, myPort));
 
             System.out.println("Server listens on " + myPort + " at " + myIP);
-            
+
             while (keepRunning) {
                 socket = serverSocket.accept();
                 ClientHandling cl = new ClientHandling(socket, this);
@@ -51,6 +53,7 @@ public class Server {
 
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        
         }
     }
 
@@ -60,22 +63,23 @@ public class Server {
 
     //Adds client from the list of clients. and prints the name of the
     //added user
-    public String addClient(ClientHandling client) {
+    public void addClient(ClientHandling client) {
+        newClient = client.getUsername();
         clients.add(client);
-        return "UPDATE#" + client.getName();
-
+        for (ClientHandling cl : clients){
+        cl.sendMessage("#UPDATE " + newClient);
+        }
     }
-
+    
     //Removes client from the list of clients. and prints the deleted client.
     public void removeClient(ClientHandling client) {
-        removedClient = client.getName();
-        clients.remove(client);
+        removedClient = client.getUsername();
+        for(ClientHandling cl: clients){
+            cl.sendMessage("DELETE#" + removedClient);
+            clients.remove(client);
+        }
     }
 
-//    public void notifyServer()
-//    {
-//        getAddedUser();
-//    }
     public String getClientList() {
         String clientList = "CLIENTS:";
         for (int i = 0; i < clients.size() - 1; i++) {
@@ -83,7 +87,21 @@ public class Server {
         }
         clientList += clients.get(clients.size() - 1).getUsername();
         return clientList;
+    }
 
+    //This method sends a message to sepcified user(s)
+    public void sendSpecific(String receiver, String text, String from) {
+        for (ClientHandling client : clients) {
+            if (client.getUsername().equals(receiver)) {
+                client.sendMessage("MSG#" + from + "#" + text);
+            }
+        }
+    }
+    
+    public void sendToAll(String text){
+       for (ClientHandling client : clients){
+           client.sendMessage("MSG#" + client.getUsername() + "#" + text);
+       }
     }
 
     public String getSuccessMsg(String toUser) {

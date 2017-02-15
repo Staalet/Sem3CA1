@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.Logger;    
 
 /**
  *
@@ -61,7 +61,7 @@ public class ClientHandling extends Thread {
             }
         } catch (IOException ex) {
             System.out.println("io exception in clienthandler switch" + ex);
-        } catch (NoSuchElementException | ArrayIndexOutOfBoundsException e2) {
+        } catch (Exception e2) {
             server.removeClient(this);
             try {
                 link.close();

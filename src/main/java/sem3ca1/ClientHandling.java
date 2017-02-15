@@ -39,6 +39,7 @@ public class ClientHandling extends Thread {
             scan = new Scanner(link.getInputStream());
 
             while (true) {
+                
                 String[] inputFromClients = scan.nextLine().split("#");//Læser input fra client og deler inputtet op. 
                 inputFromClients[0] = inputFromClients[0].toUpperCase();//Prevents upper/lowercase typos.
                 inputFromClients[1] = inputFromClients[1].toUpperCase();//writes all names in uppercase.

@@ -27,7 +27,8 @@ public class Server {
     private String myIP;
     private int myPort;
     public ArrayList<ClientHandling> clients = new ArrayList<>();
-    private String removedClient = "";
+    private String removedClient;
+    private String newClient;
 
     public static void main(String[] args) {
 
@@ -62,15 +63,21 @@ public class Server {
 
     //Adds client from the list of clients. and prints the name of the
     //added user
-    public String addClient(ClientHandling client) {
+    public void addClient(ClientHandling client) {
+        newClient = client.getUsername();
         clients.add(client);
-        return "UPDATE#" + client.getUsername();
+        for (ClientHandling cl : clients){
+        cl.sendMessage("#UPDATE " + newClient);
+        }
     }
-
+    
     //Removes client from the list of clients. and prints the deleted client.
     public void removeClient(ClientHandling client) {
-        removedClient = client.getName();
-        clients.remove(client);
+        removedClient = client.getUsername();
+        for(ClientHandling cl: clients){
+            cl.sendMessage("DELETE#" + removedClient);
+            clients.remove(client);
+        }
     }
 
     public String getClientList() {
@@ -89,6 +96,12 @@ public class Server {
                 client.sendMessage("MSG#" + from + "#" + text);
             }
         }
+    }
+    
+    public void sendToAll(String text){
+       for (ClientHandling client : clients){
+           client.sendMessage("MSG#" + client.getUsername() + "#" + text);
+       }
     }
 
     public String getSuccessMsg(String toUser) {

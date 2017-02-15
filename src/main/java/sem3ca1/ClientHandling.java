@@ -8,6 +8,7 @@ package sem3ca1;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,24 +39,20 @@ public class ClientHandling extends Thread {
             scan = new Scanner(link.getInputStream());
 
             while (true) {
-                //Læser input fra client og deler inputtet op. 
-                String[] inputFromClients = scan.nextLine().split("#");
-                //Prevents upper/lowercase typos
-                inputFromClients[0] = inputFromClients[0].toUpperCase();
-
+                String[] inputFromClients = scan.nextLine().split("#");//Læser input fra client og deler inputtet op. 
+                inputFromClients[0] = inputFromClients[0].toUpperCase();//Prevents upper/lowercase typos.
+                inputFromClients[1] = inputFromClients[1].toUpperCase();//writes all names in uppercase.
                 switch (inputFromClients[0]) {
-                    //Setting username when logging in
                     case "LOGIN":
                         setUsername(inputFromClients[1]); //set username
-                        sendMessage(server.addClient(this)); //add client to list on server.
+                        server.addClient(this); //add client to list on server.
                         sendMessage(server.getClientList()); //prints the clientlist th the 
                         break;
 
                     case "MSG":
-
-                        //Sends a message to all the users online    
+                           
                         if (inputFromClients[1].equals("ALL")) {
-                            sendMessage("MSG#" + getUsername() + "#" + inputFromClients[2]);
+                        server.sendToAll(inputFromClients[2]); //Sends a message to all the users online 
                             break;
                         } else {
                             server.sendSpecific(inputFromClients[1], inputFromClients[2], getUsername());
@@ -63,23 +60,19 @@ public class ClientHandling extends Thread {
                 }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
+            System.out.println("io exception in clienthandler switch" + ex);
+        } catch (NoSuchElementException | ArrayIndexOutOfBoundsException e2) {
+            server.removeClient(this);
             try {
-
-                sendMessage("DELETE#" + getUsername());
-                server.removeClient(this);
                 link.close();
-
+                System.out.println("A client has disconnected");
             } catch (IOException ex) {
-                Logger.getLogger(ClientHandling.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
         }
 
     }
 
-//    private String sendMessageToUser(){
-//     
     //Writes the message, flushes and print to Output "Send message"
     public void sendMessage(String msg) {
         pw.println(msg);

@@ -63,23 +63,23 @@ public class Server {
     //added user
     public void addClient(ClientHandling client) {
         newClient = client.getUsername();
-        clients.add(client);
         for (ClientHandling cl : clients){
-        cl.sendMessage("#UPDATE " + newClient);
+        cl.sendMessage("UPDATE#" + newClient);
         }
+        clients.add(client);
     }
     
     //Removes client from the list of clients. and prints the deleted client.
     public void removeClient(ClientHandling client) {
         removedClient = client.getUsername();
+            clients.remove(client);
         for(ClientHandling cl: clients){
             cl.sendMessage("DELETE#" + removedClient);
-            clients.remove(client);
         }
     }
 
     public String getClientList() {
-        String clientList = "OK:"; 
+        String clientList = "OK#"; 
         for (int i = 0; i < clients.size() - 1; i++) {
             clientList += clients.get(i).getUsername() + "#";
         }
@@ -96,9 +96,9 @@ public class Server {
         }
     }
     
-    public void sendToAll(String text){
+    public void sendToAll(String text, String username){
        for (ClientHandling client : clients){
-           client.sendMessage("MSG#" + client.getUsername() + "#" + text);
+           client.sendMessage("MSG#" + username + "#" + text);
        }
     }
 

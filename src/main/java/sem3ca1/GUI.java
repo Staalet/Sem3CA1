@@ -5,6 +5,10 @@
  */
 package sem3ca1;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author madsr
@@ -15,6 +19,11 @@ public class GUI extends javax.swing.JFrame
     /**
      * Creates new form GUI
      */
+    Client c = new Client();
+    Server s = new Server();
+    InputThread it1;
+    InputThread it2;
+
     public GUI()
     {
         initComponents();
@@ -30,21 +39,153 @@ public class GUI extends javax.swing.JFrame
     private void initComponents()
     {
 
+        sendButton = new javax.swing.JButton();
+        messageField = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        chatArea = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        clientList = new javax.swing.JTextArea();
+        portField = new javax.swing.JTextField();
+        addressField = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        sendButton.setText("SEND");
+        sendButton.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                sendButtonActionPerformed(evt);
+            }
+        });
+
+        messageField.setText("Insert your message here");
+        messageField.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                messageFieldActionPerformed(evt);
+            }
+        });
+
+        chatArea.setColumns(20);
+        chatArea.setRows(5);
+        jScrollPane1.setViewportView(chatArea);
+
+        clientList.setColumns(20);
+        clientList.setRows(5);
+        jScrollPane2.setViewportView(clientList);
+
+        portField.setText("Port");
+        portField.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                portFieldActionPerformed(evt);
+            }
+        });
+
+        addressField.setText("Address");
+        addressField.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                addressFieldActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Connect");
+        jButton2.addActionListener(new java.awt.event.ActionListener()
+        {
+            public void actionPerformed(java.awt.event.ActionEvent evt)
+            {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addComponent(messageField)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addressField, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jButton2)
+                        .addGap(0, 104, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(portField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addressField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(messageField))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void sendButtonActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_sendButtonActionPerformed
+    {//GEN-HEADEREND:event_sendButtonActionPerformed
+
+        c.send(messageField.getText());
+
+    }//GEN-LAST:event_sendButtonActionPerformed
+
+    private void messageFieldActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_messageFieldActionPerformed
+    {//GEN-HEADEREND:event_messageFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_messageFieldActionPerformed
+
+    private void addressFieldActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_addressFieldActionPerformed
+    {//GEN-HEADEREND:event_addressFieldActionPerformed
+        // Textfield for address
+    }//GEN-LAST:event_addressFieldActionPerformed
+
+    private void portFieldActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_portFieldActionPerformed
+    {//GEN-HEADEREND:event_portFieldActionPerformed
+        // Textfield for port
+    }//GEN-LAST:event_portFieldActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
+    {//GEN-HEADEREND:event_jButton2ActionPerformed
+        //Connection button
+        try
+        {
+            c.connectToServer(addressField.getText(), Integer.parseInt(portField.getText()));
+
+            it1 = new InputThread(chatArea, clientList, c);
+            it1.start();
+            
+        } catch (IOException ex)
+        {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -92,5 +233,14 @@ public class GUI extends javax.swing.JFrame
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField addressField;
+    private javax.swing.JTextArea chatArea;
+    private javax.swing.JTextArea clientList;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField messageField;
+    private javax.swing.JTextField portField;
+    private javax.swing.JButton sendButton;
     // End of variables declaration//GEN-END:variables
 }

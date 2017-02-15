@@ -81,7 +81,7 @@ public class Server {
     }
 
     public String getClientList() {
-        String clientList = "CLIENTS:";
+        String clientList = "OK:"; 
         for (int i = 0; i < clients.size() - 1; i++) {
             clientList += clients.get(i).getUsername() + "#";
         }

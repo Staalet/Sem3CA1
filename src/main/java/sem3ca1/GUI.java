@@ -179,10 +179,7 @@ public class GUI extends javax.swing.JFrame
         {
             c.connectToServer(addressField.getText(), Integer.parseInt(portField.getText()));
             chatArea.append("You're connected, write \" LOGIN#[USERNAME] \" \n");
-        } else
-        {
-            chatArea.append("Failed to connect. \n");
-        }
+        } 
         it1 = new InputThread(chatArea, clientList, c);
         it1.start();
 

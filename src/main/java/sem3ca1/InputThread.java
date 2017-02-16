@@ -90,9 +90,13 @@ class InputThread extends Thread
                             myJTextArea2.append(username + "\n");
                         }
                         
-                        myJTextArea.append(args[1] + "Has left the room");
+                        myJTextArea.append(args[1] + "Has left the room \n");
                         
                         break;
+                        
+                    case "FAIL":
+                        myJTextArea.append("Username already taken, you have been disconnected \n");
+                        break; 
                 }
             } catch (Exception ex)
             {

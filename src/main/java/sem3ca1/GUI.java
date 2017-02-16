@@ -174,17 +174,16 @@ public class GUI extends javax.swing.JFrame
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_jButton2ActionPerformed
     {//GEN-HEADEREND:event_jButton2ActionPerformed
         //Connection button
-        try
+
+        if (c.connectToServer(addressField.getText(), Integer.parseInt(portField.getText())) == true)
         {
             c.connectToServer(addressField.getText(), Integer.parseInt(portField.getText()));
+            chatArea.append("You're connected, write \" LOGIN#[USERNAME] \" \n");
+        } 
+        it1 = new InputThread(chatArea, clientList, c);
+        it1.start();
 
-            it1 = new InputThread(chatArea, clientList, c);
-            it1.start();
-            
-        } catch (IOException ex)
-        {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

@@ -81,6 +81,7 @@ class InputThread extends Thread
 
                     case "DELETE":
                         
+                         
                         users.remove(args[1]);
                         myJTextArea2.setText("");
                         

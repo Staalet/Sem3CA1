@@ -101,9 +101,4 @@ public class Server {
            client.sendMessage("MSG#" + username + "#" + text);
        }
     }
-
-    public String getSuccessMsg(String toUser) {
-        return "OK#" + getClientList();
-    }
-
 }

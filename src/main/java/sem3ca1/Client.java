@@ -26,20 +26,31 @@ public class Client {
     private InetAddress adress;
     int port;
 
-    public void connectToServer(String ip, int port) throws UnknownHostException, IOException {
-        this.port = port;
-        adress = InetAddress.getByName(ip);
-        socket = new Socket(adress, port);
-        pw = new PrintWriter(socket.getOutputStream());
-        scan = new Scanner(socket.getInputStream());
+    public boolean connectToServer(String ip, int port) {
+        try {
+            this.port = port;
+            adress = InetAddress.getByName(ip);
+            socket = new Socket(adress, port);
+            pw = new PrintWriter(socket.getOutputStream());
+            scan = new Scanner(socket.getInputStream());
+            return true;
+        } catch (UnknownHostException ue) {
+            System.out.println("Couldn't connect");
+            return false;
+        } catch (IOException ie) {
+            System.out.println("IOException");
+            return false;
+        }
     }
 
-    public String receive(String msg) {
+    public String receive() {
+        String msg;
         msg = scan.nextLine();
         return msg;
     }
 
     public void send(String msg) {
+
         pw.println(msg);
         pw.flush();
     }
@@ -51,18 +62,11 @@ public class Client {
             ip = args[0];
             port = Integer.parseInt(args[1]);
         }
-        try {
 
-            Client tester = new Client();
-            tester.connectToServer(ip, port);
-            tester.send("login#Thomas");
-            tester.send("MSG#ALL#hej");
-
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Client tester = new Client();
+        tester.connectToServer(ip, port);
+        tester.send("login#Thomas");
+        tester.send("MSG#ALL#hej");
 
     }
 }

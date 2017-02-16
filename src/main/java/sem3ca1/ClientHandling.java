@@ -8,25 +8,25 @@ package sem3ca1;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;    
+import java.util.Scanner;
 
 /**
  *
  * @author christian
  */
 public class ClientHandling extends Thread {
-
+    
     Socket link;
     private String username;
     private Server server;
     PrintWriter pw;
     Scanner scan;
-
+    
     public ClientHandling(Socket link, Server server) {
         this.link = link;
         this.server = server;
     }
-
+    
     @Override
     public void run() {
         try {
@@ -34,7 +34,7 @@ public class ClientHandling extends Thread {
             pw = new PrintWriter(link.getOutputStream());
             //creates a new inputstream.
             scan = new Scanner(link.getInputStream());
-
+            
             while (true) {
                 
                 String[] inputFromClients = scan.nextLine().split("#");//Læser input fra client og deler inputtet op. 
@@ -43,13 +43,19 @@ public class ClientHandling extends Thread {
                 switch (inputFromClients[0]) {
                     case "LOGIN":
                         setUsername(inputFromClients[1]); //set username
+                        for (ClientHandling client : server.clients) {
+                            if (client.getUsername().equals(username)) {
+                                sendMessage("username " + "'" + getUsername() + "'" + " already in use! Please connect again.");
+                                link.close();
+                            }
+                        }
                         server.addClient(this); //add client to list on server.
-                        sendMessage(server.getClientList()); //prints the clientlist th the 
+                        sendMessage(server.getClientList()); //prints the clientlist to the new client.
                         break;
-
+                    
                     case "MSG":
                         if (inputFromClients[1].equals("ALL")) {
-                            server.sendToAll(inputFromClients[2]); //Sends a message to all the users online 
+                            server.sendToAll(inputFromClients[2],this.username); //Sends a message to all the users online 
                             break;
                         } else {
                             server.sendSpecific(inputFromClients[1], inputFromClients[2], getUsername());
@@ -59,15 +65,17 @@ public class ClientHandling extends Thread {
         } catch (IOException ex) {
             System.out.println("io exception in clienthandler switch" + ex);
         } catch (Exception e2) {
-            server.removeClient(this);
             try {
                 link.close();
                 System.out.println("A client has disconnected");
             } catch (IOException ex) {
                 ex.printStackTrace();
+            } finally {
+                
+            server.removeClient(this);
             }
         }
-
+        
     }
 
     //Writes the message, flushes and print to Output "Send message"

@@ -56,13 +56,9 @@ public class ServerTest {
             Client client = new Client();
             String expResult = "#UPDATE THOMAS/n OK:THOMAS";
             String result;
-            try {
-                client.connectToServer("localhost", 8080);
-            } catch (IOException ex) {
-                Logger.getLogger(ServerTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            client.connectToServer("localhost", 8080);
             client.send("LOGIN#Thomas");
-            result = client.receive("");
+            result = client.receive();
             assertEquals(expResult, result);
         }).start();
 

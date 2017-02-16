@@ -59,18 +59,12 @@ public class ProtocolTest {
             //Connects with the clienthandler so we can use methods
             ClientHandling ch = new ClientHandling(socket, server);
             ch.run();
-            try {
-                //Clients connects to server
-                client1.connectToServer("localhost", 8080);
-                client2.connectToServer("localhost", 8080);
-                client1.send("LOGIN#Christian");
-                client2.send("LOGIN#Thomas");
-                //client 1 sends a msg to all
-                client1.send("msg#all#hej");
-                result = client2.receive("");
-            } catch (IOException ex) {
-                Logger.getLogger(ProtocolTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            client1.connectToServer("localhost", 8080);
+            client2.connectToServer("localhost", 8080);
+            client1.send("LOGIN#Christian");
+            client2.send("LOGIN#Thomas");
+            client1.send("msg#all#hej");
+            result = client2.receive();
             assertEquals(expResult, result);
         }).start();
 
@@ -89,16 +83,12 @@ public class ProtocolTest {
             String expResult = "hej thomas";
             String result;
 
-            try {
-                client1.connectToServer("localhost", 8080);
-                client2.connectToServer("localhost", 8080);
-                client1.send("LOGIN#Christian");
-                client2.send("LOGIN#Thomas");
-                client1.send("MSG#Thomas#hej thomas");
-                result = client2.receive("");
-            } catch (IOException ex) {
-                Logger.getLogger(ProtocolTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            client1.connectToServer("localhost", 8080);
+            client2.connectToServer("localhost", 8080);
+            client1.send("LOGIN#Christian");
+            client2.send("LOGIN#Thomas");
+            client1.send("MSG#Thomas#hej thomas");
+            result = client2.receive();
             assertEquals(expResult, result);
         }).start();
     }
@@ -114,13 +104,9 @@ public class ProtocolTest {
             ch.run();
             String expResult = "#UPDATE THOMAS/n OK:THOMAS";
             String result;
-            try {
-                client.connectToServer("localhost", 8080);
-                client.send("LOGIN#Thomas");
-            } catch (IOException ex) {
-                Logger.getLogger(ProtocolTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            result = client.receive("");
+            client.connectToServer("localhost", 8080);
+            client.send("LOGIN#Thomas");
+            result = client.receive();
             assertEquals(expResult, result);
         }).start();
     }
@@ -150,7 +136,6 @@ public class ProtocolTest {
 //            assertEquals(expResult, result);
 //        }).start();
 //    }
-
     @Test
     public void clientLogOutProtocol() {
         new Thread(() -> {
@@ -170,11 +155,11 @@ public class ProtocolTest {
                 client1.send("LOGIN#Thomas");
                 client2.send("LOGIN#Christian");
                 client1.socket.close();
-                result = client2.receive("");
+                result = client2.receive();
+                assertEquals(expResult, result);
             } catch (IOException ex) {
                 Logger.getLogger(ProtocolTest.class.getName()).log(Level.SEVERE, null, ex);
             }
-            assertEquals(expResult, result);
 
         }).start();
     }

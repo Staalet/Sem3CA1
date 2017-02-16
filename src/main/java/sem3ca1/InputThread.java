@@ -95,6 +95,7 @@ class InputThread extends Thread
                         break;
                         
                     case "FAIL":
+                        users.remove(args[1]);
                         myJTextArea.append("Username already taken, you have been disconnected \n");
                         break; 
                 }

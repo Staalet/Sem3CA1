@@ -45,7 +45,7 @@ public class ClientHandling extends Thread {
                         setUsername(inputFromClients[1]); //set username
                         for (ClientHandling client : server.clients) {
                             if (client.getUsername().equals(username)) {
-                                sendMessage("username " + "'" + getUsername() + "'" + " already in use! Please connect again.");
+                                sendMessage("FAIL");
                                 link.close();
                             }
                         }
@@ -66,6 +66,8 @@ public class ClientHandling extends Thread {
             System.out.println("io exception in clienthandler switch" + ex);
         } catch (Exception e2) {
             try {
+                pw.println("FAIL");
+                pw.flush();
                 link.close();
                 System.out.println("A client has disconnected");
             } catch (IOException ex) {

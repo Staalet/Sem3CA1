@@ -40,7 +40,7 @@ class InputThread extends Thread
 
                 tmp = client.receive();
 
-                System.out.println(tmp);
+                //System.out.println(tmp);
 
                 String[] args = tmp.split("#");
                 String command = args[0];
@@ -69,7 +69,7 @@ class InputThread extends Thread
 
                         break;
                     case "UPDATE":
-
+                        
                         if (!users.contains(args[1]))
                         {
                             users.add(args[1]);
@@ -81,7 +81,8 @@ class InputThread extends Thread
 
                     case "DELETE":
                         
-                        users.remove(args[1]);
+                         
+                        users.remove(args[0]);
                         myJTextArea2.setText("");
                         
                         for (int i = 1; i < args.length; i++)
@@ -95,6 +96,7 @@ class InputThread extends Thread
                         break;
                         
                     case "FAIL":
+                        users.remove(args[1]);
                         myJTextArea.append("Username already taken, you have been disconnected \n");
                         break; 
                 }

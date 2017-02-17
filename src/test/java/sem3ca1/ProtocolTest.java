@@ -111,31 +111,27 @@ public class ProtocolTest {
         }).start();
     }
 
-//    @Test
-//    public void failProtocol() {
-//        new Thread(() -> {
-//            Server server = new Server();
-//            server.RunServer("localhost", 8080);
-//            Client client1 = new Client();
-//            Client client2 = new Client();
-//            Socket socket = new Socket();
-//            ClientHandling ch = new ClientHandling(socket, server);
-//            ch.run();
-//            String expResult = "FAIL";
-//            String result;
-//
-//            try {
-//                client1.connectToServer("localhost", 8080);
-//                client2.connectToServer("localhost", 8080);
-//                client1.send("LOGIN#Thomas");
-//                client2.send("LOGIN#Thomas");
-//                result = client1.receive("");
-//            } catch (IOException ex) {
-//                Logger.getLogger(UnitTest.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            assertEquals(expResult, result);
-//        }).start();
-//    }
+    @Test
+    public void failProtocol() {
+        new Thread(() -> {
+            Server server = new Server();
+            server.RunServer("localhost", 8080);
+            Client client1 = new Client();
+            Client client2 = new Client();
+            Socket socket = new Socket();
+            ClientHandling ch = new ClientHandling(socket, server);
+            ch.run();
+            String expResult = "FAIL";
+            String result;
+
+            client1.connectToServer("localhost", 8080);
+            client2.connectToServer("localhost", 8080);
+            client1.send("LOGIN#Thomas");
+            client2.send("LOGIN#Thomas");
+            result = client1.receive();
+            assertEquals(expResult, result);
+        }).start();
+    }
     @Test
     public void clientLogOutProtocol() {
         new Thread(() -> {

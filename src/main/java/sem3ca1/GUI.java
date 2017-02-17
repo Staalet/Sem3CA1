@@ -20,7 +20,6 @@ public class GUI extends javax.swing.JFrame
      * Creates new form GUI
      */
     Client c = new Client();
-    Server s = new Server();
     InputThread it1;
     InputThread it2;
 

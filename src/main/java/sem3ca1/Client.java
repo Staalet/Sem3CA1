@@ -11,8 +11,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -54,19 +52,19 @@ public class Client {
         pw.println(msg);
         pw.flush();
     }
-
-    public static void main(String[] args) {
-        int port = 8081;
-        String ip = "localhost";
-        if (args.length == 2) {
-            ip = args[0];
-            port = Integer.parseInt(args[1]);
-        }
-
-        Client tester = new Client();
-        tester.connectToServer(ip, port);
-        tester.send("login#Thomas");
-        tester.send("MSG#ALL#hej");
-
-    }
+// Just a test
+//    public static void main(String[] args) {
+//        int port = 8080;
+//        String ip = "localhost";
+//        if (args.length == 2) {
+//            ip = args[0];
+//            port = Integer.parseInt(args[1]);
+//        }
+//
+//        Client tester = new Client();
+//        tester.connectToServer(ip, port);
+//        tester.send("login#Thomas");
+//        tester.send("MSG#ALL#hej");
+//
+//    }
 }

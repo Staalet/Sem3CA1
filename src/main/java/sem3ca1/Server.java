@@ -31,7 +31,7 @@ public class Server {
     public static void main(String[] args) {
 
         Server server = new Server();
-        server.RunServer("localhost", 8081);
+        server.RunServer("localhost", 8080);
     }
 
     public void RunServer(String ip, int port) {

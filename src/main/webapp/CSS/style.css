@@ -4,6 +4,13 @@ body{
   margin: 20px 70px;
 }
 
+a{
+    color: blue;
+}
+a:visited {
+    color: blue;
+}
+
 h3 {
   margin-bottom: 0px;
 }

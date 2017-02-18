@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Documentation</title>
+        <link href="CSS/style.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <header>
+            <h1 class="title">CA1 Group5 Documentation</h1>
+            <h2 class="undertitle">Developed by Thomas Staal, Mads Ibsen and Christian Øst-Jacobsen Group 5. </h2>
+            <h3><a href="https://github.com/coej94/Sem3CA1">Githublink to the project</a></h3>
+            <h3><a href="Software/ClientGroup5.jar" download> Downloadable client.jar </a></h3>
+            <p>The server is running on server address 139.59.148.148 at port 8081 </p>
+            <h3><a href="index.html"> Back to the index-page </a></h3>
+            
+        </header>
+
+        <section>
+            <h1>Tests</h1>
+            <div class="bod">
+                <p>
+                    Test and test results: Link to source-code for the test:
+                    <a href="https://github.com/coej94/Sem3CA1/tree/master/src/test/java/sem3ca1">Link to tests on github.</a><br><br> We have made tests on the protocol. We have tested for the inputs and outputs for the different clients when a client interacts.
+                    We have tested on the different responds you can see on the img.<br>
+                    <img src="img/test1.png" alt="test picture" class="test"><br> Our test passes when we use the protocols properties right.
+                    <br><img src="img/test2.png" alt="test picture" class="test"><br> We have also tested the server when it runs on its own thread, and a client connecting in its own thread. Our test passed so our server can run on a single thread and get
+                    input from clients”other threads”. <br> Here we see the last test, where we connect to tomcat at the digital ocean server.
+                    <br><img src="img/test3.png" alt="test picture" class="test"><br>
+
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h1>How to use!</h1>
+            <div class="bod">
+                <p>
+                    The server is by default connecting to port 8081.
+
+                    <br><br> Login cmd:
+                <xmp class="cmd-ex">
+                    login#[username]
+                </xmp>
+                <br><br>If the username is not already in use, the client is logged in, and added to the list. Then a success message is printed to the client followed by a list of clients.
+
+                <br><br> Succes message:
+                <xmp class="cmd-ex">
+                    OK#[username], [username] …
+                </xmp>
+
+                <br><br> If this username already exists in the list, the user who is trying to connect, is kicked of the server and the client gets errormessage:
+                <br><br> Errormessage:
+                <xmp class="cmd-ex">
+                    FAIL
+                </xmp>
+
+
+                <br><br> When a new participant has joined the chat, the other clients in the chat are notified with an update message, which looks like this:
+                <br><br> Update message:
+                <xmp class="cmd-ex">
+                    UPDATE#[username of new participant]
+                </xmp>
+
+                <br><br> Equally, a Delete message appears on the other participants screen, when a client leaves the chat. This message looks like this:
+                <br><br> Delete message:
+                <xmp class="cmd-ex">
+                    DELETE#[username]
+                </xmp>
+
+                <br><br>The way the protocol is designed, makes it impossible for a participant to see a full list of clients again, when you are logged in. After this point you will only know when a new client connects or a client disconnects (unless
+                you use the GUI).
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h1>Technical design:</h1>
+            <div class="bod">
+                <p>
+                    The server contains a list of clienthandlers, which are generated when the user is logging in. When a new client has logged in successfully, the client is added to the a list of clienthandlers as a new clienthandler (see picture1).→
+                    <br><img src="img/diagram1.png" alt="diagram picture" class="diagram"><br> 
+                    This only happens if the username doesn’t exist. If it exists, the socket is closed and the client gets the message “FAIL”. 
+                    When a user is logged in he has two options; he can either send to all or to a specific client. A message contains 3 arguments, split by a #.
+                <xmp class="cmd-ex">
+                    [MSG]#[usrname/all]#[text].
+                </xmp>
+                If the second argument contains “ALL” the sendToAll() is called. In this case, the server takes the message, runs through the list of clienthandlers, and sends the message to each client. In case the second argument doesn’t contain “ALL”, the method sendToSpecifc()
+                is called. It takes in, where the message comes from, to whom the message should be sent, and the message string. Then it runs through the clientslist to find the username, and sends the message to the given client. (see picture 2) →
+                <br><img src="img/diagram2.png" alt="diagram picture" class="diagram"><br>
+
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <div class="bod">
+                <table>
+                    <h1>Who did what?</h1>
+                    <tr>
+                        <th>Date</th>
+                        <th>Thomas Staal</th>
+                        <th>Mads Ibsen</th>
+                        <th>Christian Øst-Jacobsen</th>
+                    </tr>
+                    <tr>
+                        <th>13/2</th>
+                        <td></td>
+                        <!--Thomas -->
+                        <td></td>
+                        <!--Mads Ibsen -->
+                        <td>
+                            - Preperation of github repository <br> 
+                            - Prepared serverclass for connection.
+                        </td>
+                        <!--Christian Øst-Jacobsen-->
+                    </tr>
+                    <tr>
+                        <th>14/2</th>
+                        <td> - Work on clienthandlig and made switch cases</td>
+                        <!--Thomas -->
+                        <td> - Work on observers. <br> 
+                            - How to handle added and deleted users
+                        </td>
+                        <!--Mads Ibsen -->
+                        <td>- Created basic server setup (connection) <br> 
+                            - Created Clientlist, addClient and delete client method.
+                        </td>
+                        <!--Christian Øst-Jacobsen-->
+                    </tr>
+                    <tr>
+                        <th>15/2</th>
+                        <td> - Made the client. <br> - Helped christian with method and protocol
+                        </td>
+                        <!--Thomas -->
+                        <td>- Work on client <br> 
+                            - Finished working GUI <br> 
+                            - Bugfixes in protocol <br> 
+                            - Fixed problem with exceptions in login <br>
+                            - Fixed problem with UPDATE# and OK#
+                        </td>
+                        <!--Mads Ibsen -->
+                        <td>- Created sentToSpecific method. <br> 
+                            - Implemented #update, #delete and ok# protocol.<br> 
+                            - Devided pieces of logic into smaller methods.
+                        </td>
+                        <!--Christian Øst-Jacobsen-->
+                    </tr>
+                    <tr>
+                        <th>16/2</th>
+                        <td>Made junit and other tests.</td>
+                        <!--Thomas -->
+                        <td>- Work on website for documentation <br> 
+                            - implementation of the FAIL message
+                        </td>
+                        <!--Mads Ibsen -->
+                        <td>Rapport writing (How to use, technical design and diagrams).</td>
+                        <!--Christian Øst-Jacobsen-->
+                    </tr>
+                    <tr>
+                        <th>17/2</th>
+                        <td>- Made our project run on digital ocean.</td>
+                        <!--Thomas -->
+                        <td></td>
+                        <!--Mads Ibsen -->
+                        <td>- Created the documentation webpage with css <br>
+                            - Created the <a href="Software/ClientGroup5.jar" download> downloadable client.jar </a>
+                            <br>(connect at "139.59.148.148" and port 8081.)</td>
+                        <!--Christian Øst-Jacobsen-->
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section>
+            <h1>Feed Back</h1>
+            <div class="bod">
+                <h3>Christian:</h3>
+                <p>
+                    I think this module has been well organized and it was nice for
+                    me to get new exercises everyday, to sum up the stuff from each day.
+                    <br>
+                    It has been a great help for me, that Jens has walked through the solutions
+                    every day, to make sure that no students are left behind. It has been nice
+                    to be included so much in the lessons. Thank you for a nice and challenging first module.
+                </p>
+            </div>
+        </section>
+    </body>
+</html>

@@ -31,7 +31,8 @@ public class Server {
     public static void main(String[] args) {
 
         Server server = new Server();
-        server.RunServer("localhost", 8081);
+        //server.RunServer("localhost", 8081);// For local test of server
+        server.RunServer(args[0], Integer.parseInt(args[1])); // used when running on the DigitalOceanServer (give the args when called)
     }
 
     public void RunServer(String ip, int port) {

@@ -47,7 +47,7 @@ public class TomcatTest {
     public void  tomcatTest() {
 
         when().
-                get("https://139.59.148.148.xip.io").                 
+                get("https://139.59.213.32.xip.io").                 
                 then().
                 statusCode(200);
                 
